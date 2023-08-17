@@ -1,0 +1,29 @@
+Reading package lists...
+Building dependency tree...
+Reading state information...
+libapache2-mod-php is already the newest version (2:8.1+92ubuntu1).
+php is already the newest version (2:8.1+92ubuntu1).
+apache2 is already the newest version (2.4.52-1ubuntu4.6).
+git is already the newest version (1:2.34.1-1ubuntu1.10).
+0 upgraded, 0 newly installed, 0 to remove and 333 not upgraded.
+
+<VirtualHost *:443>
+    ServerName www.victim.com
+    DocumentRoot /var/www/html/
+    SSLEngine on
+    SSLCertificateFile /home/miriana/easy-rsa/pki/issued/www.victim.com.crt
+    SSLCertificateKeyFile /home/miriana/easy-rsa/pki/private/www.victim.com.key
+    <Directory /var/www/html>
+        DirectoryIndex login.php
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+Considering dependency setenvif for ssl:
+Module setenvif already enabled
+Considering dependency mime for ssl:
+Module mime already enabled
+Considering dependency socache_shmcb for ssl:
+Module socache_shmcb already enabled
+Module ssl already enabled
+Site 000-default already enabled

@@ -1,0 +1,93 @@
+Reading package lists...
+Building dependency tree...
+Reading state information...
+dsniff is already the newest version (2.4b1+debian-30build1).
+mitmproxy is already the newest version (6.0.2-1).
+0 upgraded, 0 newly installed, 0 to remove and 333 not upgraded.
+net.ipv4.ip_forward = 1
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  libbcg729-0 libc-ares2 libdouble-conversion3 liblua5.2-0 libmd4c0
+  libminizip1 libpcre2-16-0 libqt5core5a libqt5dbus5 libqt5gui5
+  libqt5multimedia5 libqt5multimedia5-plugins libqt5multimediagsttools5
+  libqt5multimediawidgets5 libqt5network5 libqt5printsupport5 libqt5svg5
+  libqt5widgets5 libsmi2ldbl libsnappy1v5 libspandsp2 libssh-gcrypt-4
+  libwireshark-data libwireshark15 libwiretap12 libwsutil13 libxcb-xinerama0
+  libxcb-xinput0 qt5-gtk-platformtheme qttranslations5-l10n wireshark-common
+  wireshark-qt
+Suggested packages:
+  qt5-image-formats-plugins qtwayland5 snmp-mibs-downloader geoipupdate
+  geoip-database geoip-database-extra libjs-leaflet
+  libjs-leaflet.markercluster wireshark-doc
+The following NEW packages will be installed:
+  libbcg729-0 libc-ares2 libdouble-conversion3 liblua5.2-0 libmd4c0
+  libminizip1 libpcre2-16-0 libqt5core5a libqt5dbus5 libqt5gui5
+  libqt5multimedia5 libqt5multimedia5-plugins libqt5multimediagsttools5
+  libqt5multimediawidgets5 libqt5network5 libqt5printsupport5 libqt5svg5
+  libqt5widgets5 libsmi2ldbl libsnappy1v5 libspandsp2 libssh-gcrypt-4
+  libwireshark-data libwireshark15 libwiretap12 libwsutil13 libxcb-xinerama0
+  libxcb-xinput0 qt5-gtk-platformtheme qttranslations5-l10n wireshark
+  wireshark-common wireshark-qt
+0 upgraded, 33 newly installed, 0 to remove and 333 not upgraded.
+Need to get 39.8 MB of archives.
+After this operation, 181 MB of additional disk space will be used.
+Get:1 https://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 libdouble-conversion3 amd64 3.1.7-4 [39.0 kB]
+Get:2 https://mu.archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpcre2-16-0 amd64 10.39-3ubuntu0.1 [203 kB]
+Get:3 http://mu.archive.ubuntu.com/ubuntu jammy-updates/universe amd64 libqt5core5a amd64 5.15.3+dfsg-2ubuntu0.2 [2 006 kB]
+Get:4 https://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 libmd4c0 amd64 0.4.8-1 [42.0 kB]
+Get:5 http://mu.archive.ubuntu.com/ubuntu jammy-updates/universe amd64 libqt5dbus5 amd64 5.15.3+dfsg-2ubuntu0.2 [222 kB]
+Get:6 http://mu.archive.ubuntu.com/ubuntu jammy-updates/universe amd64 libqt5network5 amd64 5.15.3+dfsg-2ubuntu0.2 [731 kB]
+Get:7 https://mu.archive.ubuntu.com/ubuntu jammy/main amd64 libxcb-xinerama0 amd64 1.14-3ubuntu3 [5 414 B]
+Get:8 https://mu.archive.ubuntu.com/ubuntu jammy/main amd64 libxcb-xinput0 amd64 1.14-3ubuntu3 [34.3 kB]
+Get:9 http://mu.archive.ubuntu.com/ubuntu jammy-updates/universe amd64 libqt5gui5 amd64 5.15.3+dfsg-2ubuntu0.2 [3 722 kB]
+Get:10 http://mu.archive.ubuntu.com/ubuntu jammy-updates/universe amd64 libqt5widgets5 amd64 5.15.3+dfsg-2ubuntu0.2 [2 561 kB]
+Get:11 https://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 libqt5svg5 amd64 5.15.3-1 [149 kB]
+Get:12 https://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 libbcg729-0 amd64 1.1.1-2 [32.9 kB]
+Get:13 https://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 liblua5.2-0 amd64 5.2.4-2 [125 kB]
+Get:14 https://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 libminizip1 amd64 1.1-8build1 [20.2 kB]
+Get:15 https://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 libqt5multimedia5 amd64 5.15.3-1 [320 kB]
+Get:16 https://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 libqt5multimediawidgets5 amd64 5.15.3-1 [42.6 kB]
+Get:17 https://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 libqt5multimediagsttools5 amd64 5.15.3-1 [112 kB]
+Get:18 https://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 libqt5multimedia5-plugins amd64 5.15.3-1 [178 kB]
+Get:19 http://mu.archive.ubuntu.com/ubuntu jammy-updates/universe amd64 libqt5printsupport5 amd64 5.15.3+dfsg-2ubuntu0.2 [214 kB]
+Get:20 http://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 libsmi2ldbl amd64 0.4.8+dfsg2-16 [100 kB]
+Get:21 http://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 libspandsp2 amd64 0.0.6+dfsg-2 [272 kB]
+Get:22 https://mu.archive.ubuntu.com/ubuntu jammy-updates/main amd64 libssh-gcrypt-4 amd64 0.9.6-2ubuntu0.22.04.1 [222 kB]
+Get:23 https://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 libwireshark-data all 3.6.2-2 [1 647 kB]
+Get:24 https://mu.archive.ubuntu.com/ubuntu jammy-updates/main amd64 libc-ares2 amd64 1.18.1-1ubuntu0.22.04.2 [45.0 kB]
+Get:25 https://mu.archive.ubuntu.com/ubuntu jammy/main amd64 libsnappy1v5 amd64 1.1.8-1build3 [17.5 kB]
+Get:26 https://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 libwsutil13 amd64 3.6.2-2 [99.2 kB]
+Get:27 https://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 libwiretap12 amd64 3.6.2-2 [255 kB]
+Get:28 https://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 libwireshark15 amd64 3.6.2-2 [19.5 MB]
+Get:29 http://mu.archive.ubuntu.com/ubuntu jammy-updates/universe amd64 qt5-gtk-platformtheme amd64 5.15.3+dfsg-2ubuntu0.2 [130 kB]
+Get:30 https://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 qttranslations5-l10n all 5.15.3-1 [1 983 kB]
+Get:31 https://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 wireshark-common amd64 3.6.2-2 [473 kB]
+Get:32 https://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 wireshark-qt amd64 3.6.2-2 [4 269 kB]
+Get:33 https://mu.archive.ubuntu.com/ubuntu jammy/universe amd64 wireshark amd64 3.6.2-2 [4 992 B]
+Preconfiguring packages ...
+[?1049h[22;0;0t[1;24r[4l[?25l(B[m[37m[40m[1;24r[H[2J[1;1H[97m[45m[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K[1;1H[37mPackage configuration[3;2H[30m[47m┌─────────────────────┤ [31mConfiguring wireshark-common[30m ├──────────────────────┐[4;2H│                                                                           │[97m[40m [5;2H[30m[47m│ Dumpcap can be installed in a way that allows members of the "wireshark"  │[97m[40m [6;2H[30m[47m│ system group to capture packets. This is recommended over the             │[97m[40m [7;2H[30m[47m│ alternative of running Wireshark/Tshark directly as root, because less    │[97m[40m [8;2H[30m[47m│ of the code will run with elevated privileges.                            │[97m[40m [9;2H[30m[47m│                                                                           │[97m[40m [10;2H[30m[47m│ For more detailed information please see                                  │[97m[40m [11;2H[30m[47m│ /usr/share/doc/wireshark-common/README.Debian.gz once the package is      │[97m[40m [12;2H[30m[47m│ installed.                                                                │[97m[40m [13;2H[30m[47m│                                                                           │[97m[40m [14;2H[30m[47m│ Enabling this feature may be a security risk, so it is disabled by        │[97m[40m [15;2H[30m[47m│ default. If in doubt, it is suggested to leave it disabled.               │[97m[40m [16;2H[30m[47m│                                                                           │[97m[40m [17;2H[30m[47m│ Should non-superusers be able to capture packets?                         │[97m[40m [18;2H[30m[47m│                                                                           │[97m[40m [19;2H[30m[47m│                    <Yes>                       [37m[41m<No>[30m[47m                       │[97m[40m [20;2H[30m[47m│                                                                           │[97m[40m [21;2H[30m[47m└───────────────────────────────────────────────────────────────────────────┘[97m[40m [22;3H                                                                             [19;52H
