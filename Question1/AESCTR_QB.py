@@ -1,35 +1,29 @@
 from Crypto.Cipher import AES
-from Crypto.Util import Counter
+from Crypto.Util import Counter as CryptoCounter
 
 key = b'Sixteen byte key'
-initial_ctr_value = 1
+initial_ctr_value = 22
 
-# one known plaintext
-known_plaintext = b'Known plaintext 1'
+plaintexts = [
+    b'from: Miriana Drago\r\nsecret: group_passphrase\r\nto: Prof. Smith\r\nmsg: Can I meet you tomorrow?',
+    b'from: Roberto Drago\r\nsecret: group_passphrase\r\nto: Math Dept.\r\nmsg: I will submit by Friday.',
+]
 
-# encrypting the known plaintext with a repeating keystream
-ctr = Counter.new(128, initial_value=initial_ctr_value)
-cipher = AES.new(key, AES.MODE_CTR, counter=ctr)
-ciphertext = cipher.encrypt(known_plaintext)
+ciphertexts = []
 
-# calculating the keystream by XORing the known plaintext with the corresponding ciphertext
-# keystream is the sequence of bytes that was used to encrypt the known plaintext, determined by key and counter value
-keystream = bytes([p ^ c for p, c in zip(known_plaintext, ciphertext)])
-print("Keystream: ", keystream)
+# encrypt with repeating key stream
+for plaintext in plaintexts: 
+    ctr = CryptoCounter.new(128, initial_value=initial_ctr_value) # same initial value for each plaintext
+    cipher = AES.new(key, AES.MODE_CTR, counter=ctr)
+    ciphertext = cipher.encrypt(plaintext)
+    ciphertexts.append(ciphertext)
 
-# encrypting another plaintext with the same keystream
-another_plaintext = b'Known plaintext 2'
-ctr = Counter.new(128, initial_value=initial_ctr_value) # same initial value for repeating keystream
-cipher = AES.new(key, AES.MODE_CTR, counter=ctr)
-other_ciphertext = cipher.encrypt(another_plaintext)
+# known plaintext recovery
+# if we know the plaintext for the first ciphertext, we can recover the key stream
+known_plaintext = plaintexts[0]
+# XOR the known plaintext with the ciphertext, giving the key stream
+recovered_keystream = bytes([a ^ b for a, b in zip(known_plaintext, ciphertexts[0])])
+# use the recovered key stream to decrypt the second ciphertext
+recovered_plaintext = bytes([a ^ b for a, b in zip(recovered_keystream, ciphertexts[1])])
 
-# decrypt using the keystream - XORING ciphertext with keystream -> giving back original plaintext
-decrypted_text = bytes([c ^ k for c, k in zip(other_ciphertext, keystream)])
-
-# validating the attack
-if decrypted_text == another_plaintext:
-    print("Attack successful!")
-else:
-    print("Attack failed!")
-
-print("Decrypted text:", decrypted_text.decode())
+print("Known plaintext attack result: ", recovered_plaintext.decode('utf-8'))

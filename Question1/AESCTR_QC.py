@@ -1,58 +1,73 @@
-from Crypto.Cipher import AES
-from Crypto.Util import Counter
 import zlib
+from Crypto.Cipher import AES
+from Crypto import Random
+from Crypto.Util import Counter
 
-def attack(encrypt_oracle, known_prefix, padding_byte):
-    """
-    Recovers a secret using the CRIME attack (CTR version).
-    :param encrypt_oracle: the encryption oracle
-    :param known_prefix: a known prefix of the secret to recover
-    :param padding_byte: a byte which is never used in the plaintext
-    :return: the secret
-    """
-    known_prefix = bytearray(known_prefix) # a portion of the plaintext that the attacker already knows or can guess
-    padding_bytes = bytes([padding_byte])
-    while True:
-        for i in range(256):
-            # Don't try the padding byte.
-            if i == padding_byte:
-                continue
+# generate random IV & Key
+def read_IV_and_KEY():
+    IV = Random.new().read(AES.block_size)
+    KEY = Random.new().read(AES.block_size)
+    return IV, KEY
 
-            l1 = len(encrypt_oracle(padding_bytes + known_prefix + bytes([i]) + padding_bytes + padding_bytes))
-            l2 = len(encrypt_oracle(padding_bytes + known_prefix + padding_bytes + bytes([i]) + padding_bytes))
-            if l1 < l2:
-                known_prefix.append(i)
-                break
-        else:
-            return known_prefix
+# encrypt the message & compress it using zlib
+def encrypt(msg):
+    ctr = Counter.new(128)
+    cipher = AES.new(KEY, AES.MODE_CTR, counter=ctr)
+    return cipher.encrypt(zlib.compress(msg))
 
-# encryption oracle compresses and then encrypts the plaintext using AES-CTR - returns the resulting ciphertext
-def encrypt_oracle(plaintext):
-    # key and initial counter value for AES-CTR
-    key = b'Sixteen byte key'
-    initial_ctr_value = 1
+# encrypt_oracle: function used for encryption
+# known: known prefix of secret
+# special_sequence: sequence of special characters
+# secret: the secret to be discovered
+# max_len: max length of secret
+# found_chars: list to store found chars of secret
+def attack(encrypt_oracle, known, special_sequence, secret, max_len):
+    found_chars = []
+    
+    # loop to guess next character (iterating through ASCII values 33 to 126)
+    for i in range(33, 127):
+        # encrypt + compress two different sequences
+        # one with the guessed character before the special sequence and the other after
+        enc1 = encrypt_oracle(known + bytes([i]) + special_sequence + b' ' + secret)
+        enc2 = encrypt_oracle(known + special_sequence + bytes([i]) + b' ' + secret)
+        
+        # compression length - check which encryption is shorter, indicating a correct guess
+        if len(enc1) < len(enc2):
+            found_chars.append(bytes([i]))
+    
+    # recursive call & handling ambiguities 
+    if len(found_chars) == 1:
+        known += found_chars[0]
+        if len(known) >= max_len:
+            return known
+        return attack(encrypt_oracle, known, special_sequence, secret, max_len)
+    
+    # if there are multiple chars that could potentially be the next char of the secret
+    elif len(found_chars) > 1:
+        print("Ambiguity detected. Choosing the most compressed one.")
+        # the one char that results in the most compressed ciphertext is chosen
+        # done by checking the length of the encrypted message for each character and picking 
+        # one that results in the maximum compression
+        max_compression_char = max(found_chars, key=lambda ch: len(encrypt_oracle(known + ch + special_sequence + b' ' + secret)))
+        known += max_compression_char
+        if len(known) >= max_len:
+            return known
+        # recursively call the attack function to continue discovering
+        return attack(encrypt_oracle, known, special_sequence, secret, max_len)
+    
+    else:
+        # end attack
+        print("No further characters found.")
+        return known
 
-    # compressing the plaintext using DEFLATE
-    compressed_plaintext = zlib.compress(plaintext)
+if __name__ == '__main__':
+    IV, KEY = read_IV_and_KEY()
 
-    # encrypting the compressed plaintext using AES-CTR
-    ctr = Counter.new(128, initial_value=initial_ctr_value)
-    cipher = AES.new(key, AES.MODE_CTR, counter=ctr)
-    ciphertext = cipher.encrypt(compressed_plaintext)
+    SECRET = "GroupPassphrase=Secure123!".encode('utf-8')
+    print("Secret TOKEN:", SECRET)
 
-    return ciphertext
+    # used to detect changes in the compressed and encrypted message
+    SPECIAL_SEQUENCE = '~#:/[|/ç'.encode('utf-8')
 
-# known prefix for the attack
-known_prefix = b'from: someone\r\n'
-# padding byte that is never used in the plaintext
-padding_byte = 255
-# secret to be recovered (for demonstration purposes)
-secret = b'secret: passphrase\r\nto: another\r\nmsg: blablabla\r\n\r\n'
-# full plaintext including the known prefix and the secret
-plaintext = known_prefix + secret
-# encryption oracle function that takes plaintext and returns ciphertext
-oracle = lambda plaintext: encrypt_oracle(plaintext)
-# executing the attack to recover the secret
-recovered_secret = attack(oracle, known_prefix, padding_byte)
-# print the recovered secret
-print("Recovered secret:", recovered_secret.decode())
+    recovered_secret = attack(encrypt, b"GroupPassphrase=", SPECIAL_SEQUENCE, SECRET, len(SECRET))
+    print("Recovered secret:", recovered_secret.decode('utf-8'))

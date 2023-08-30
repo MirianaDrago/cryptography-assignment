@@ -1,55 +1,69 @@
 from Crypto.Cipher import AES
 from Crypto.Util import Counter as CryptoCounter
-from collections import Counter as CollectionsCounter
+from collections import defaultdict
 
 key = b'Sixteen byte key'
 initial_ctr_value = 22
-initial_nr_ctr_value = 1
 
 plaintexts = [
-    b'My name is Miriana Drago, I am 23 years old and I study Computer Science.',
-    b'My name is Roberto Drago, I am 18 years old and I study Mathematics.',
-    b'My name is Simone Drago, I am 50 years old and I study Medicine.'
+    b'from: Miriana Drago\r\nsecret: group_passphrase\r\nto: Prof. Smith\r\nmsg: Can I meet you tomorrow?',
+    b'from: Roberto Drago\r\nsecret: group_passphrase\r\nto: Math Dept.\r\nmsg: I will submit by Friday.',
+    b'from: Simone Drago\r\nsecret: group_passphrase\r\nto: Dr. Jones\r\nmsg: I need a prescription.',
+    b'from: Nicole Drago\r\nsecret: group_passphrase\r\nto: Dr. Jones\r\nmsg: I need a refill for my prescription.'
 ]
 
-ciphertexts = []
-non_repeating_ciphertexts = []
+# function to perform frequency analysis
+def frequency_analysis(ciphertexts):
+    # dictionary to store byte frequencies
+    byte_frequencies = defaultdict(int)
+    for ciphertext in ciphertexts:
+        # loop through each byte in the ciphertext
+        for byte in ciphertext:
+            # increment frequency count for each byte
+            byte_frequencies[byte] += 1
+    return byte_frequencies
 
-# repeating key stream
-
+# encrypt plain texts using AES-CTR with a repeating key stream
+ciphertexts_repeating = []
 for plaintext in plaintexts: 
-    ctr = CryptoCounter.new(128, initial_valuesho=initial_ctr_value) # same initial value for each plaintext
+    ctr = CryptoCounter.new(128, initial_value=initial_ctr_value)
     cipher = AES.new(key, AES.MODE_CTR, counter=ctr)
-    ciphertext = cipher.encrypt(plaintext)
-    ciphertexts.append(ciphertext)
+    ciphertexts_repeating.append(cipher.encrypt(plaintext))
 
-# frequency analysis attack on repeating keystream
+# encrypt plain texts using AES-CTR with a non-repeating key stream
+ciphertexts_non_repeating = []
+for i, plaintext in enumerate(plaintexts): 
+    ctr = CryptoCounter.new(128, initial_value=initial_ctr_value + i)
+    cipher = AES.new(key, AES.MODE_CTR, counter=ctr)
+    ciphertexts_non_repeating.append(cipher.encrypt(plaintext))
 
-# combine all ciphertexts into one bytearray
-combined_ciphertext = b''.join(ciphertexts)
-# count the frequency of each byte value in the combined ciphertext
-byte_frequencies = CollectionsCounter(combined_ciphertext)
-# print the most common byte values and their frequencies
-print("REPEATING KEYSTREAM")
-for byte_value, frequency in byte_frequencies.most_common():
-    print(f"Byte value: {byte_value}, Frequency: {frequency}")
+# frequency analysis
+freq_repeating = frequency_analysis(ciphertexts_repeating)
+freq_non_repeating = frequency_analysis(ciphertexts_non_repeating)
 
-# non-repeating key stream
+# results
+print("Frequency analysis with repeating keystream:")
+# 10 most common bytes
+for byte, freq in sorted(freq_repeating.items(), key=lambda x: x[1], reverse=True)[:10]:
+    print(f"Byte: {byte}, Frequency: {freq}")
 
-ctr = CryptoCounter.new(128, initial_value=initial_nr_ctr_value)
-cipher = AES.new(key, AES.MODE_CTR, counter=ctr)
+print("\nFrequency analysis with non-repeating keystream:")
+for byte, freq in sorted(freq_non_repeating.items(), key=lambda x: x[1], reverse=True)[:10]:
+    print(f"Byte: {byte}, Frequency: {freq}")
 
-for plaintext in plaintexts:
-    ciphertext = cipher.encrypt(plaintext)
-    non_repeating_ciphertexts.append(ciphertext)
+# assuming the most common plaintext byte is for 'f' (ASCII 102)
+# this is just a test
+known_plaintext_byte = 102
 
-# frequency analysis attack on non-repeating keystream
+# the most common ciphertext byte from the frequency analysis
+most_common_ciphertext_byte = max(freq_repeating, key=freq_repeating.get)
 
-# combine all ciphertexts into one bytearray
-combined_nr_ciphertext = b''.join(non_repeating_ciphertexts)
-# count the frequency of each byte value in the combined ciphertext
-byte_nr_frequencies = CollectionsCounter(combined_nr_ciphertext)
-# print the most common byte values and their frequencies
-print("NON-REPEATING KEYSTREAM")
-for byte_value, frequency in byte_nr_frequencies.most_common():
-    print(f"Byte value: {byte_value}, Frequency: {frequency}")
+# guess the key stream byte
+guessed_keystream_byte = most_common_ciphertext_byte ^ known_plaintext_byte
+print(f"Guessed key stream byte for 'f': {guessed_keystream_byte}")
+
+# decrypt occurrences of the most common ciphertext byte
+for i, ciphertext in enumerate(ciphertexts_repeating):
+    decrypted_bytes = [b ^ guessed_keystream_byte if b == most_common_ciphertext_byte else None for b in ciphertext]
+    decrypted_chars = [chr(b) for b in decrypted_bytes if b is not None]
+    print(f"Decrypted occurrences in ciphertext {i+1}: {decrypted_chars}")
